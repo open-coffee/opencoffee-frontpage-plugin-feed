@@ -1,0 +1,34 @@
+language: java
+
+script: ./mvnw test jacoco:report coveralls:report
+
+jdk:
+- oraclejdk8
+
+before_deploy:
+  - mvn -DskipTests package
+  - export JAR_FILE=$(ls target/frontpage-plugin-rss*.jar)
+  - echo "deploying $JAR_FILE to GitHub releases"
+
+deploy:
+  provider: releases
+  api_key:
+    secure: QWLP7PlFfBKYk/lbZv1DSFM+xdP3hJ1Psp5SH4GXXmrUG7vtl7g8snIVQJ7i6oUSMjFpqsuJZg59Xp/OzvqDvmv3fwoNE/GsKJJ6CmbYOP21ocVqMHJDpayghGB0ghPHHRi4pV2CDYdG8ZaW6Iu/Q0ESXPgT/QraAn9mVnGd/t3fFlwSHDdVoe4SlMThJpZcvi8ZHJSSqyCYSjdcd6aHPu/d1r4UMH15IWLNEn4VS4Lr3gaHHyPhDyXLi3G6bZxOT/wywVF8fqJ00cKoHyu6HC9vm8GnxcdP9aGfM617DRYhWWwcauxN66u8gZTrCBS/UgVjGHHOccXXgGpXXgQasSqbr5t0iH6wcLlzbElRFqcqF6zt8Tie53RxiouNM9O3vg90t9ChArvSQ6E22EojCWpw4zP/Qi8/vX2eH/kKatLuTEE2oMzm5+l7wrvqwVENmmcgb5EDaAhZDxtzSPh9TPwUjkSg/K2+BW2Ued0aA27kWULWmQ5sHvIvFzbmaubUcBlp+ShesWIbiO104gY4Ny0rOG7TLo48CGIKRe6aKqIQR3RpYRIAymf7L2VppQMVjLHB4MSh+ZSIfx06Wq0rvhHlks5P8muIHzI1XkYzqX1wtOXeMmN7Fnw5MWI8V56KYFpaEETlLGXfCevZVDzvqZS+klfxFwYgWSCpyTNeOKE=
+  file: "${JAR_FILE}"
+  skip_cleanup: true
+  on:
+    tags: true
+    repo: coffeenet/coffeenet-frontpage-plugin-rss
+
+notifications:
+  irc:
+    channels:
+      - "irc.synyx.de#CoffeeNet"
+    on_success: change # default: always
+    on_failure: always # default: always
+    use_notice: true
+    skip_join: true
+
+cache:
+  directories:
+    - $HOME/.m2
