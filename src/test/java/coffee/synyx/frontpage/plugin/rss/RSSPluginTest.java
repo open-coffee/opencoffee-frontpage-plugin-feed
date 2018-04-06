@@ -37,8 +37,10 @@ public class RSSPluginTest {
 
         assertThat(sut.title()).isEqualTo("Synyx Blog");
         assertThat(sut.content()).contains("author - date", "title", "description", "link");
+        assertThat(sut.id()).isEqualTo("rss");
     }
 
+    //
     @Test
     public void throwsParserException() {
 

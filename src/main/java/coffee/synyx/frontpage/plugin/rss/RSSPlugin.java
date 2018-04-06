@@ -41,4 +41,9 @@ public class RSSPlugin implements FrontpagePluginInterface {
 
         return content;
     }
+
+    @Override
+    public String id() {
+        return "rss";
+    }
 }
