@@ -58,6 +58,11 @@ public class RSSPlugin implements FrontpagePlugin {
             }
 
             @Override
+            public boolean isRequired() {
+                return true;
+            }
+
+            @Override
             public String getId() {
                 return id;
             }
