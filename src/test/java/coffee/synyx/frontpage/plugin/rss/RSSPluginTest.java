@@ -1,6 +1,7 @@
 package coffee.synyx.frontpage.plugin.rss;
 
 
+import coffee.synyx.frontpage.plugin.api.ConfigurationInstance;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,15 +15,25 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class RSSPluginTest {
 
-    private static final String BLOG_URL = "https://www.synyx.de/blog/index.xml";
-    private static final int BLOG_ENTRY_COUNT = 10;
-    private static final int DESCRIPTION_LENGTH = 200;
-
     private RSSPlugin sut;
 
     @Mock
     private BlogParser blogParser;
 
+    private ConfigurationInstance configurationInstance = key -> {
+        switch (key) {
+            case "rss.field.title":
+                return "title";
+            case "rss.field.url":
+                return "url";
+            case "rss.field.entry.count":
+                return "10";
+            case "rss.field.entry.length":
+                return "100";
+            default:
+                return "";
+        }
+    };
 
     @Before
     public void setUp() {
@@ -33,18 +44,17 @@ public class RSSPluginTest {
     public void returnsCorrectHtml() {
 
         BlogEntry blogEntry = new BlogEntry("title", "description", "link", "author", "date");
-        when(blogParser.parse(BLOG_URL, BLOG_ENTRY_COUNT, DESCRIPTION_LENGTH)).thenReturn(singletonList(blogEntry));
+        when(blogParser.parse("url", 10, 100)).thenReturn(singletonList(blogEntry));
 
-        assertThat(sut.title()).isEqualTo("Synyx Blog");
-        assertThat(sut.content()).contains("author - date", "title", "description", "link");
+        assertThat(sut.title(configurationInstance)).isEqualTo("title");
+        assertThat(sut.content(configurationInstance)).contains("author - date", "title", "description", "link");
         assertThat(sut.id()).isEqualTo("rss");
     }
 
-    //
     @Test
     public void throwsParserException() {
 
-        when(blogParser.parse(BLOG_URL, BLOG_ENTRY_COUNT, DESCRIPTION_LENGTH)).thenThrow(new ParserException("message", new Throwable()));
-        assertThat(sut.content()).isEqualTo("");
+        when(blogParser.parse("title", 10, 100)).thenThrow(new ParserException("message", new Throwable()));
+        assertThat(sut.content(configurationInstance)).isEqualTo("");
     }
 }
