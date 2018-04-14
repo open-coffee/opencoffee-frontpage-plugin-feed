@@ -2,6 +2,7 @@ package coffee.synyx.frontpage.plugin.rss;
 
 import coffee.synyx.frontpage.plugin.api.ConfigurationDescription;
 import coffee.synyx.frontpage.plugin.api.ConfigurationField;
+import coffee.synyx.frontpage.plugin.api.ConfigurationFieldType;
 import coffee.synyx.frontpage.plugin.api.ConfigurationInstance;
 import coffee.synyx.frontpage.plugin.api.FrontpagePlugin;
 import org.slf4j.Logger;
@@ -30,10 +31,10 @@ public class RSSPlugin implements FrontpagePlugin {
 
     private static final Set<ConfigurationField> CONFIGURATION_FIELDS = Collections.unmodifiableSet(new HashSet<>(
         asList(
-            createField("Title", "text", RSS_FIELD_TITLE),
-            createField("URL", "text", RSS_FIELD_URL),
-            createField("Anzahl Artikel", "text", RSS_FIELD_ENTRY_COUNT),
-            createField("Teaser Text Länge", "text", RSS_FIELD_ENTRY_LENGTH)
+            createField("Title", ConfigurationFieldType.TEXT, RSS_FIELD_TITLE),
+            createField("URL", ConfigurationFieldType.URL, RSS_FIELD_URL),
+            createField("Anzahl Artikel", ConfigurationFieldType.NUMBER, RSS_FIELD_ENTRY_COUNT),
+            createField("Teaser Text Länge", ConfigurationFieldType.NUMBER, RSS_FIELD_ENTRY_LENGTH)
         )
     ));
 
@@ -44,7 +45,7 @@ public class RSSPlugin implements FrontpagePlugin {
         this.blogParser = blogParser;
     }
 
-    private static ConfigurationField createField(final String label, final String type, final String id) {
+    private static ConfigurationField createField(final String label, final ConfigurationFieldType type, final String id) {
         return new ConfigurationField() {
             @Override
             public String getLabel() {
@@ -52,8 +53,13 @@ public class RSSPlugin implements FrontpagePlugin {
             }
 
             @Override
-            public String getType() {
+            public ConfigurationFieldType getType() {
                 return type;
+            }
+
+            @Override
+            public boolean isRequired() {
+                return true;
             }
 
             @Override
