@@ -1,4 +1,4 @@
-package coffee.synyx.frontpage.plugin.rss;
+package coffee.synyx.frontpage.plugin.feed;
 
 import com.rometools.rome.feed.synd.SyndContentImpl;
 import com.rometools.rome.feed.synd.SyndEntryImpl;

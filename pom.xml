@@ -9,24 +9,24 @@
     <version>0.29.0</version>
   </parent>
 
-  <artifactId>frontpage-plugin-rss</artifactId>
+  <artifactId>frontpage-plugin-feed</artifactId>
   <version>0.1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>frontpage-plugin-rss</name>
+  <name>frontpage-plugin-feed</name>
   <description>
-    rss plugin for the CoffeeNet Frontpage
+    feed plugin for the CoffeeNet Frontpage
   </description>
 
   <issueManagement>
-    <url>https://github.com/coffeenet/coffeenet-frontpage-plugin-rss/issues</url>
+    <url>https://github.com/coffeenet/coffeenet-frontpage-plugin-feed/issues</url>
     <system>GitHub Issues</system>
   </issueManagement>
 
   <scm>
-    <url>https://github.com/coffeenet/coffeenet-frontpage-plugin-rss</url>
-    <connection>scm:git:git://github.com/coffeenet/coffeenet-frontpage-plugin-rss.git</connection>
-    <developerConnection>scm:git:git@github.com:coffeenet/coffeenet-frontpage-plugin-rss.git</developerConnection>
+    <url>https://github.com/coffeenet/coffeenet-frontpage-plugin-feed</url>
+    <connection>scm:git:git://github.com/coffeenet/coffeenet-frontpage-plugin-feed.git</connection>
+    <developerConnection>scm:git:git@github.com:coffeenet/coffeenet-frontpage-plugin-feed.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 

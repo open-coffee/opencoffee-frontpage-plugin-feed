@@ -7,7 +7,7 @@ jdk:
 
 before_deploy:
   - mvn -DskipTests package
-  - export JAR_FILE=$(ls target/frontpage-plugin-rss*.jar)
+  - export JAR_FILE=$(ls target/frontpage-plugin-feed*.jar)
   - echo "deploying $JAR_FILE to GitHub releases"
 
 deploy:
@@ -18,7 +18,7 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
-    repo: coffeenet/coffeenet-frontpage-plugin-rss
+    repo: coffeenet/coffeenet-frontpage-plugin-feed
 
 notifications:
   irc:
