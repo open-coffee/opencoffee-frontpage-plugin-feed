@@ -82,4 +82,28 @@ public class BlogParserTest {
 
         sut.parse("/feed/", 10, 1);
     }
+
+    @Test
+    public void reduceTextButTextIsLessThanMaxLength() {
+
+        final String thisIsAShortText = "thisIsAShortText";
+        final String reducedText = sut.reduceText(thisIsAShortText, 16);
+        assertThat(reducedText, is(thisIsAShortText));
+    }
+
+    @Test
+    public void reduceTextAndTextIsGreaterThanMaxLength() {
+
+        final String longText = "This is a very long text with more than 10 characters";
+        final String reducedText = sut.reduceText(longText, 10);
+        assertThat(reducedText, is("This is a ..."));
+    }
+
+    @Test
+    public void reduceTextAndTextIsGreaterThanMaxLengthWithLink() {
+
+        final String longText = "This is <a href=\"test\">a Link</a> and a very long text with more than 10 characters";
+        final String reducedText = sut.reduceText(longText, 11);
+        assertThat(reducedText, is("This is \n<a href=\"test\">a Link</a>..."));
+    }
 }
