@@ -1,4 +1,4 @@
-package coffee.synyx.frontpage.plugin.rss;
+package coffee.synyx.frontpage.plugin.feed;
 
 
 import coffee.synyx.frontpage.plugin.api.ConfigurationInstance;
@@ -13,22 +13,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RSSPluginTest {
+public class FeedPluginTest {
 
-    private RSSPlugin sut;
+    private FeedPlugin sut;
 
     @Mock
     private BlogParser blogParser;
 
     private ConfigurationInstance configurationInstance = key -> {
         switch (key) {
-            case "rss.field.title":
+            case "feed.field.title":
                 return "title";
-            case "rss.field.url":
+            case "feed.field.url":
                 return "url";
-            case "rss.field.entry.count":
+            case "feed.field.entry.count":
                 return "10";
-            case "rss.field.entry.length":
+            case "feed.field.entry.length":
                 return "100";
             default:
                 return "";
@@ -37,7 +37,7 @@ public class RSSPluginTest {
 
     @Before
     public void setUp() {
-        sut = new RSSPlugin(blogParser);
+        sut = new FeedPlugin(blogParser);
     }
 
     @Test
@@ -48,7 +48,7 @@ public class RSSPluginTest {
 
         assertThat(sut.title(configurationInstance)).isEqualTo("title");
         assertThat(sut.content(configurationInstance)).contains("author - date", "title", "description", "link");
-        assertThat(sut.id()).isEqualTo("rss");
+        assertThat(sut.id()).isEqualTo("feed");
     }
 
     @Test

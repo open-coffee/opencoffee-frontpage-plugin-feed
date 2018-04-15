@@ -1,4 +1,4 @@
-package coffee.synyx.frontpage.plugin.rss;
+package coffee.synyx.frontpage.plugin.feed;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -9,7 +9,7 @@ import static java.lang.Math.min;
 
 
 /**
- * Interface for different rss parser implementations
+ * Interface for different feed parser implementations
  *
  * @author Tobias Schneider - schneider@synyx.de
  */

@@ -1,4 +1,4 @@
-package coffee.synyx.frontpage.plugin.rss;
+package coffee.synyx.frontpage.plugin.feed;
 
 import com.rometools.rome.feed.module.DCModule;
 import com.rometools.rome.feed.synd.SyndEntry;
@@ -42,7 +42,7 @@ public class BlogParser implements Parser<BlogEntry> {
 
             return feed.getEntries().stream().limit(limit).map(toBlogEntry(length)).collect(toList());
         } catch (FeedException | IOException e) {
-            throw new ParserException("Failed to parse blog with rss link " + blogUrl, e);
+            throw new ParserException("Failed to parse blog with feed link " + blogUrl, e);
         }
     }
 

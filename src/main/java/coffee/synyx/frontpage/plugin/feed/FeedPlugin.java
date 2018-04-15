@@ -1,4 +1,4 @@
-package coffee.synyx.frontpage.plugin.rss;
+package coffee.synyx.frontpage.plugin.feed;
 
 import coffee.synyx.frontpage.plugin.api.ConfigurationDescription;
 import coffee.synyx.frontpage.plugin.api.ConfigurationField;
@@ -15,33 +15,33 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static coffee.synyx.frontpage.plugin.rss.HtmlConverter.toHtml;
+import static coffee.synyx.frontpage.plugin.feed.HtmlConverter.toHtml;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
 
 @Component
-public class RSSPlugin implements FrontpagePlugin {
+public class FeedPlugin implements FrontpagePlugin {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(lookup().lookupClass());
 
-    private static final String RSS_FIELD_TITLE = "rss.field.title";
-    private static final String RSS_FIELD_URL = "rss.field.url";
-    private static final String RSS_FIELD_ENTRY_COUNT = "rss.field.entry.count";
-    private static final String RSS_FIELD_ENTRY_LENGTH = "rss.field.entry.length";
+    private static final String FEED_FIELD_TITLE = "feed.field.title";
+    private static final String FEED_FIELD_URL = "feed.field.url";
+    private static final String FEED_FIELD_ENTRY_COUNT = "feed.field.entry.count";
+    private static final String FEED_FIELD_ENTRY_LENGTH = "feed.field.entry.length";
 
     private static final Set<ConfigurationField> CONFIGURATION_FIELDS = Collections.unmodifiableSet(new HashSet<>(
         asList(
-            createField("Title", ConfigurationFieldType.TEXT, RSS_FIELD_TITLE),
-            createField("URL", ConfigurationFieldType.URL, RSS_FIELD_URL),
-            createField("Anzahl Artikel", ConfigurationFieldType.NUMBER, RSS_FIELD_ENTRY_COUNT),
-            createField("Teaser Text Länge", ConfigurationFieldType.NUMBER, RSS_FIELD_ENTRY_LENGTH)
+            createField("Title", ConfigurationFieldType.TEXT, FEED_FIELD_TITLE),
+            createField("URL", ConfigurationFieldType.URL, FEED_FIELD_URL),
+            createField("Anzahl Artikel", ConfigurationFieldType.NUMBER, FEED_FIELD_ENTRY_COUNT),
+            createField("Teaser Text Länge", ConfigurationFieldType.NUMBER, FEED_FIELD_ENTRY_LENGTH)
         )
     ));
 
     private final BlogParser blogParser;
 
     @Autowired
-    public RSSPlugin(BlogParser blogParser) {
+    public FeedPlugin(BlogParser blogParser) {
         this.blogParser = blogParser;
     }
 
@@ -71,21 +71,21 @@ public class RSSPlugin implements FrontpagePlugin {
 
     @Override
     public String title(ConfigurationInstance configurationInstance) {
-        return configurationInstance.get(RSS_FIELD_TITLE);
+        return configurationInstance.get(FEED_FIELD_TITLE);
     }
 
     @Override
     public String content(ConfigurationInstance configurationInstance) {
 
-        final String feedUrl = configurationInstance.get(RSS_FIELD_URL);
-        final int entryCount = Integer.parseInt(configurationInstance.get(RSS_FIELD_ENTRY_COUNT));
-        final int entryLength = Integer.parseInt(configurationInstance.get(RSS_FIELD_ENTRY_LENGTH));
+        final String feedUrl = configurationInstance.get(FEED_FIELD_URL);
+        final int entryCount = Integer.parseInt(configurationInstance.get(FEED_FIELD_ENTRY_COUNT));
+        final int entryLength = Integer.parseInt(configurationInstance.get(FEED_FIELD_ENTRY_LENGTH));
 
         String content = "";
         try {
             content = toHtml(blogParser.parse(feedUrl, entryCount, entryLength));
         } catch (ParserException e) {
-            LOGGER.error("RSS Plugin: Could not receive rss feed from {}", feedUrl);
+            LOGGER.error("Feed Plugin: Could not receive feed feed from {}", feedUrl);
         }
 
         return content;
@@ -93,7 +93,7 @@ public class RSSPlugin implements FrontpagePlugin {
 
     @Override
     public String id() {
-        return "rss";
+        return "feed";
     }
 
     @Override
