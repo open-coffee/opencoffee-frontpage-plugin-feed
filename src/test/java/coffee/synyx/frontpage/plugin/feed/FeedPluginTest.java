@@ -1,12 +1,15 @@
 package coffee.synyx.frontpage.plugin.feed;
 
 
+import coffee.synyx.frontpage.plugin.api.ConfigurationDescription;
 import coffee.synyx.frontpage.plugin.api.ConfigurationInstance;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -56,5 +59,12 @@ public class FeedPluginTest {
 
         when(blogParser.parse("url", 10, 100)).thenThrow(new ParserException("message", new Throwable()));
         assertThat(sut.content(configurationInstance)).isEqualTo("");
+    }
+
+    @Test
+    public void numberOfConfigurationFieldsAreCorrect() {
+
+        final Optional<ConfigurationDescription> optionalConfigurationDescription = sut.getConfigurationDescription();
+        assertThat(optionalConfigurationDescription.get().getConfigurations()).hasSize(4);
     }
 }
