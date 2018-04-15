@@ -54,7 +54,7 @@ public class FeedPluginTest {
     @Test
     public void throwsParserException() {
 
-        when(blogParser.parse("title", 10, 100)).thenThrow(new ParserException("message", new Throwable()));
+        when(blogParser.parse("url", 10, 100)).thenThrow(new ParserException("message", new Throwable()));
         assertThat(sut.content(configurationInstance)).isEqualTo("");
     }
 }
