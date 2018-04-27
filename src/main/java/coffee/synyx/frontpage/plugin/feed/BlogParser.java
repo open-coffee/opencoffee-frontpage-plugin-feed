@@ -46,15 +46,22 @@ public class BlogParser implements Parser<BlogEntry> {
         }
     }
 
-
     private Function<SyndEntry, BlogEntry> toBlogEntry(int length) {
 
         return
             entry -> {
-                String description = reduceText(entry.getDescription().getValue(), length);
+                String article = "";
+
+                if (entry.getDescription() != null) {
+                    article = entry.getDescription().getValue();
+                } else if (!entry.getContents().isEmpty()) {
+                    article = entry.getContents().get(0).getValue();
+                }
+
+                String reducedArticle = reduceText(article, length);
                 String date = getPublishDate(entry);
 
-                return new BlogEntry(entry.getTitle(), description, entry.getLink(), entry.getAuthor(), date);
+                return new BlogEntry(entry.getTitle(), reducedArticle, entry.getLink(), entry.getAuthor(), date);
             };
     }
 
