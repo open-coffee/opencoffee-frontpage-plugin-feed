@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
@@ -73,7 +74,8 @@ public class BlogParser implements Parser<BlogEntry> {
             .filter(module -> module instanceof DCModule)
             .map(module -> (DCModule) module)
             .map(DCModule::getDate)
-            .map(f -> new SimpleDateFormat("d. MMMM yyyy").format(f))
+            .filter(Objects::nonNull)
+            .map(date -> new SimpleDateFormat("d. MMMM yyyy").format(date))
             .findFirst()
             .orElse(null);
     }

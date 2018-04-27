@@ -20,6 +20,7 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -87,6 +88,21 @@ public class BlogParserTest {
         assertThat(blogEntries, hasSize(1));
         assertThat(blogEntries.get(0).getDescription(), is("content"));
         assertThat(blogEntries.get(0).getPublishDate(), is("3. December 2014"));
+    }
+
+
+    @Test
+    public void parseBlogButPublishedDateIsNull() throws FeedException, IOException {
+
+        SyndFeed result = new SyndFeedImpl();
+        result.setEntries(singletonList(new SyndEntryImpl()));
+
+        when(feedFactory.build(any(URL.class))).thenReturn(result);
+
+        List<BlogEntry> blogEntries = sut.parse("http://blog/feed/", 10, 150);
+
+        assertThat(blogEntries, hasSize(1));
+        assertThat(blogEntries.get(0).getPublishDate(), is(nullValue()));
     }
 
 
