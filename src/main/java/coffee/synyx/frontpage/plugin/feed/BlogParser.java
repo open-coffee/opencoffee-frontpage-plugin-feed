@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
@@ -46,15 +47,22 @@ public class BlogParser implements Parser<BlogEntry> {
         }
     }
 
-
     private Function<SyndEntry, BlogEntry> toBlogEntry(int length) {
 
         return
             entry -> {
-                String description = reduceText(entry.getDescription().getValue(), length);
+                String article = "";
+
+                if (entry.getDescription() != null) {
+                    article = entry.getDescription().getValue();
+                } else if (!entry.getContents().isEmpty()) {
+                    article = entry.getContents().get(0).getValue();
+                }
+
+                String reducedArticle = reduceText(article, length);
                 String date = getPublishDate(entry);
 
-                return new BlogEntry(entry.getTitle(), description, entry.getLink(), entry.getAuthor(), date);
+                return new BlogEntry(entry.getTitle(), reducedArticle, entry.getLink(), entry.getAuthor(), date);
             };
     }
 
@@ -66,7 +74,8 @@ public class BlogParser implements Parser<BlogEntry> {
             .filter(module -> module instanceof DCModule)
             .map(module -> (DCModule) module)
             .map(DCModule::getDate)
-            .map(f -> new SimpleDateFormat("d. MMMM yyyy").format(f))
+            .filter(Objects::nonNull)
+            .map(date -> new SimpleDateFormat("d. MMMM yyyy").format(date))
             .findFirst()
             .orElse(null);
     }

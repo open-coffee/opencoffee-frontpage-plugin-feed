@@ -20,6 +20,7 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -40,7 +41,7 @@ public class BlogParserTest {
 
 
     @Test
-    public void parseBlog() throws FeedException, IOException {
+    public void parseBlogRss() throws FeedException, IOException {
 
         SyndContentImpl description = new SyndContentImpl();
         description.setValue("description");
@@ -65,6 +66,43 @@ public class BlogParserTest {
         assertThat(blogEntries.get(0).getPublishDate(), is("3. December 2014"));
         assertThat(blogEntries.get(0).getAuthor(), is("author"));
         assertThat(blogEntries.get(0).getTitle(), is("title"));
+    }
+
+    @Test
+    public void parseBlogAtom() throws FeedException, IOException {
+
+        SyndContentImpl content = new SyndContentImpl();
+        content.setValue("content");
+
+        SyndEntryImpl syndEntry = new SyndEntryImpl();
+        syndEntry.setContents(singletonList(content));
+        syndEntry.setPublishedDate(Date.from(Instant.parse("2014-12-03T10:15:30.00Z")));
+
+        SyndFeed result = new SyndFeedImpl();
+        result.setEntries(singletonList(syndEntry));
+
+        when(feedFactory.build(any(URL.class))).thenReturn(result);
+
+        List<BlogEntry> blogEntries = sut.parse("http://blog/feed/", 10, 150);
+
+        assertThat(blogEntries, hasSize(1));
+        assertThat(blogEntries.get(0).getDescription(), is("content"));
+        assertThat(blogEntries.get(0).getPublishDate(), is("3. December 2014"));
+    }
+
+
+    @Test
+    public void parseBlogButPublishedDateIsNull() throws FeedException, IOException {
+
+        SyndFeed result = new SyndFeedImpl();
+        result.setEntries(singletonList(new SyndEntryImpl()));
+
+        when(feedFactory.build(any(URL.class))).thenReturn(result);
+
+        List<BlogEntry> blogEntries = sut.parse("http://blog/feed/", 10, 150);
+
+        assertThat(blogEntries, hasSize(1));
+        assertThat(blogEntries.get(0).getPublishDate(), is(nullValue()));
     }
 
 
