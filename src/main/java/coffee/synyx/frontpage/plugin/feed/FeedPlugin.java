@@ -45,30 +45,6 @@ public class FeedPlugin implements FrontpagePlugin {
         this.blogParser = blogParser;
     }
 
-    private static ConfigurationField createField(final String label, final ConfigurationFieldType type, final String id) {
-        return new ConfigurationField() {
-            @Override
-            public String getLabel() {
-                return label;
-            }
-
-            @Override
-            public ConfigurationFieldType getType() {
-                return type;
-            }
-
-            @Override
-            public boolean isRequired() {
-                return true;
-            }
-
-            @Override
-            public String getId() {
-                return id;
-            }
-        };
-    }
-
     @Override
     public String title(ConfigurationInstance configurationInstance) {
         return configurationInstance.get(FEED_FIELD_TITLE);
@@ -99,5 +75,14 @@ public class FeedPlugin implements FrontpagePlugin {
     @Override
     public Optional<ConfigurationDescription> getConfigurationDescription() {
         return Optional.of(() -> CONFIGURATION_FIELDS);
+    }
+
+    private static ConfigurationField createField(final String label, final ConfigurationFieldType type, final String id) {
+        return new ConfigurationField.Builder()
+            .label(label)
+            .type(type)
+            .id(id)
+            .required(true)
+            .build();
     }
 }
