@@ -29,13 +29,11 @@ public class FeedPlugin implements FrontpagePlugin {
     private static final String FEED_FIELD_ENTRY_COUNT = "feed.field.entry.count";
     private static final String FEED_FIELD_ENTRY_LENGTH = "feed.field.entry.length";
 
-    private static final Set<ConfigurationField> CONFIGURATION_FIELDS = Collections.unmodifiableSet(new HashSet<>(
-        asList(
-            createField("Title", ConfigurationFieldType.TEXT, FEED_FIELD_TITLE),
-            createField("URL", ConfigurationFieldType.URL, FEED_FIELD_URL),
-            createField("Anzahl Artikel", ConfigurationFieldType.NUMBER, FEED_FIELD_ENTRY_COUNT),
-            createField("Teaser Text Länge", ConfigurationFieldType.NUMBER, FEED_FIELD_ENTRY_LENGTH)
-        )
+    private static final Set<ConfigurationField> CONFIGURATION_FIELDS = Collections.unmodifiableSet(asSet(
+        createField("Title", ConfigurationFieldType.TEXT, FEED_FIELD_TITLE),
+        createField("URL", ConfigurationFieldType.URL, FEED_FIELD_URL),
+        createField("Anzahl Artikel", ConfigurationFieldType.NUMBER, FEED_FIELD_ENTRY_COUNT),
+        createField("Teaser Text Länge", ConfigurationFieldType.NUMBER, FEED_FIELD_ENTRY_LENGTH)
     ));
 
     private final BlogParser blogParser;
@@ -84,5 +82,9 @@ public class FeedPlugin implements FrontpagePlugin {
             .id(id)
             .required(true)
             .build();
+    }
+
+    private static <T> Set<T> asSet(T... items) {
+        return new HashSet<>(asList(items));
     }
 }
