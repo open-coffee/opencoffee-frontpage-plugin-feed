@@ -1,6 +1,5 @@
 package coffee.synyx.frontpage.plugin.feed;
 
-import com.rometools.rome.feed.module.DCModule;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
@@ -9,11 +8,14 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Function;
 
+import static java.time.LocalDateTime.ofInstant;
+import static java.time.ZoneId.systemDefault;
 import static java.util.stream.Collectors.toList;
 
 
@@ -60,23 +62,25 @@ public class BlogParser implements Parser<BlogEntry> {
                 }
 
                 String reducedArticle = reduceText(article, length);
-                String date = getPublishDate(entry);
+                String gregorianPublishedDate = getFormattedPublishedDate(entry, "yyyy-MM-dd HH:mm");
+                String userSeenPublishedDate = getFormattedPublishedDate(entry, "d. MMMM yyyy");
 
-                return new BlogEntry(entry.getTitle(), reducedArticle, entry.getLink(), entry.getAuthor(), date);
+                return new BlogEntry(entry.getTitle(), reducedArticle, entry.getLink(), entry.getAuthor(), gregorianPublishedDate, userSeenPublishedDate);
             };
     }
 
 
-    private String getPublishDate(SyndEntry syndEntry) {
+    private String getFormattedPublishedDate(SyndEntry syndEntry, String pattern) {
 
-        return syndEntry.getModules()
-            .stream()
-            .filter(module -> module instanceof DCModule)
-            .map(module -> (DCModule) module)
-            .map(DCModule::getDate)
-            .filter(Objects::nonNull)
-            .map(date -> new SimpleDateFormat("d. MMMM yyyy").format(date))
-            .findFirst()
-            .orElse(null);
+        Date publishedDate = syndEntry.getPublishedDate();
+
+        String formattedPublishedDate = null;
+
+        if (publishedDate != null) {
+            LocalDateTime convertedDate = ofInstant(publishedDate.toInstant(), systemDefault());
+            formattedPublishedDate = DateTimeFormatter.ofPattern(pattern).format(convertedDate);
+        }
+
+        return formattedPublishedDate;
     }
 }

@@ -13,7 +13,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 
@@ -51,7 +53,7 @@ public class BlogParserTest {
         syndEntry.setLink("link");
         syndEntry.setAuthor("author");
         syndEntry.setTitle("title");
-        syndEntry.setPublishedDate(Date.from(Instant.parse("2014-12-03T10:15:30.00Z")));
+        syndEntry.setPublishedDate(getDate());
 
         SyndFeed result = new SyndFeedImpl();
         result.setEntries(singletonList(syndEntry));
@@ -63,7 +65,8 @@ public class BlogParserTest {
         assertThat(blogEntries, hasSize(1));
         assertThat(blogEntries.get(0).getDescription(), is("description"));
         assertThat(blogEntries.get(0).getLink(), is("link"));
-        assertThat(blogEntries.get(0).getPublishDate(), is("3. December 2014"));
+        assertThat(blogEntries.get(0).getUserSeenPublishedDate(), is("3. December 2014"));
+        assertThat(blogEntries.get(0).getGregorianPublishedDate(), is("2014-12-03 10:15"));
         assertThat(blogEntries.get(0).getAuthor(), is("author"));
         assertThat(blogEntries.get(0).getTitle(), is("title"));
     }
@@ -76,7 +79,7 @@ public class BlogParserTest {
 
         SyndEntryImpl syndEntry = new SyndEntryImpl();
         syndEntry.setContents(singletonList(content));
-        syndEntry.setPublishedDate(Date.from(Instant.parse("2014-12-03T10:15:30.00Z")));
+        syndEntry.setPublishedDate(getDate());
 
         SyndFeed result = new SyndFeedImpl();
         result.setEntries(singletonList(syndEntry));
@@ -87,9 +90,9 @@ public class BlogParserTest {
 
         assertThat(blogEntries, hasSize(1));
         assertThat(blogEntries.get(0).getDescription(), is("content"));
-        assertThat(blogEntries.get(0).getPublishDate(), is("3. December 2014"));
+        assertThat(blogEntries.get(0).getGregorianPublishedDate(), is("2014-12-03 10:15"));
+        assertThat(blogEntries.get(0).getUserSeenPublishedDate(), is("3. December 2014"));
     }
-
 
     @Test
     public void parseBlogButPublishedDateIsNull() throws FeedException, IOException {
@@ -102,7 +105,7 @@ public class BlogParserTest {
         List<BlogEntry> blogEntries = sut.parse("http://blog/feed/", 10, 150);
 
         assertThat(blogEntries, hasSize(1));
-        assertThat(blogEntries.get(0).getPublishDate(), is(nullValue()));
+        assertThat(blogEntries.get(0).getGregorianPublishedDate(), is(nullValue()));
     }
 
 
@@ -143,5 +146,10 @@ public class BlogParserTest {
         final String longText = "This is <a href=\"test\">a Link</a> and a very long text with more than 10 characters";
         final String reducedText = sut.reduceText(longText, 11);
         assertThat(reducedText, is("This is \n<a href=\"test\">a Link</a>..."));
+    }
+
+    private Date getDate() {
+        LocalDateTime datetime = LocalDateTime.of(2014, 12, 3, 10, 15);
+        return new Date(datetime.toInstant(ZoneOffset.of(ZoneId.systemDefault().getRules().getOffset(datetime).getId())).getEpochSecond() * 1000);
     }
 }
