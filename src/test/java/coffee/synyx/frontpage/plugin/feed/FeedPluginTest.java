@@ -46,12 +46,21 @@ public class FeedPluginTest {
     @Test
     public void returnsCorrectHtml() {
 
-        BlogEntry blogEntry = new BlogEntry("title", "description", "link", "author", "date");
+        BlogEntry blogEntry = new BlogEntry("title", "description", "link", "author", "date", "formattedDate");
         when(blogParser.parse("url", 10, 100)).thenReturn(singletonList(blogEntry));
 
         assertThat(sut.title(configurationInstance)).isEqualTo("title");
-        assertThat(sut.content(configurationInstance)).contains("author - date", "title", "description", "link");
+        assertThat(sut.content(configurationInstance)).contains("author", "date", "formattedDate", "title", "description", "link");
         assertThat(sut.id()).isEqualTo("feed");
+    }
+
+    @Test
+    public void returnsCorrectHtmlWithoutAuthor() {
+
+        BlogEntry blogEntry = new BlogEntry("title", "description", "link", "", "date", "formattedDate");
+        when(blogParser.parse("url", 10, 100)).thenReturn(singletonList(blogEntry));
+
+        assertThat(sut.content(configurationInstance)).doesNotContain("author");
     }
 
     @Test
