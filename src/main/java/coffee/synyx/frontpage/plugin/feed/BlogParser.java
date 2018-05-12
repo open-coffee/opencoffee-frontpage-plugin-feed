@@ -2,6 +2,7 @@ package coffee.synyx.frontpage.plugin.feed;
 
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
+import com.rometools.rome.feed.synd.SyndImage;
 import com.rometools.rome.io.FeedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,8 +26,7 @@ import static java.util.stream.Collectors.toList;
  * @author Tobias Schneider - schneider@synyx.de
  */
 @Component
-public class BlogParser implements Parser<BlogEntry> {
-
+public class BlogParser implements Parser {
 
     private final FeedFactory feedFactory;
 
@@ -37,16 +37,41 @@ public class BlogParser implements Parser<BlogEntry> {
     }
 
     @Override
-    public List<BlogEntry> parse(String blogUrl, int limit, int length) {
+    public Feed parse(String blogUrl, int limit, int length) {
 
         try {
-            URL url = new URL(blogUrl);
-            SyndFeed feed = feedFactory.build(url);
+            final URL url = new URL(blogUrl);
+            final SyndFeed feed = feedFactory.build(url);
 
-            return feed.getEntries().stream().limit(limit).map(toBlogEntry(length)).collect(toList());
+            final FeedImage feedImage = toFeedImage(feed.getImage());
+            final List<BlogEntry> blogEntries = feed.getEntries().stream().limit(limit).map(toBlogEntry(length)).collect(toList());
+
+            return new Feed(feedImage, blogEntries);
+
         } catch (FeedException | IOException e) {
             throw new ParserException("Failed to parse blog with feed link " + blogUrl, e);
         }
+    }
+
+    private FeedImage toFeedImage(SyndImage image) {
+
+        String url = "";
+        String link = "";
+        String description = "";
+        String width = "";
+        String height = "";
+        String title = "";
+
+        if (image != null) {
+            url = image.getUrl() == null ? "" : image.getUrl();
+            link = image.getLink() == null ? "" : image.getLink();
+            description = image.getDescription() == null ? "" : image.getDescription();
+            width = image.getWidth() == null || image.getWidth() < 0 ? "" : image.getWidth().toString();
+            height = image.getHeight() == null || image.getHeight() < 0 ? "" : image.getHeight().toString();
+            title = image.getTitle() == null ? "" : image.getTitle();
+        }
+
+        return new FeedImage(url, link, description, width, height, title);
     }
 
     private Function<SyndEntry, BlogEntry> toBlogEntry(int length) {
@@ -72,7 +97,7 @@ public class BlogParser implements Parser<BlogEntry> {
 
     private String getFormattedPublishedDate(SyndEntry syndEntry, String pattern) {
 
-        Date publishedDate = syndEntry.getPublishedDate();
+        final Date publishedDate = syndEntry.getPublishedDate();
 
         String formattedPublishedDate = null;
 

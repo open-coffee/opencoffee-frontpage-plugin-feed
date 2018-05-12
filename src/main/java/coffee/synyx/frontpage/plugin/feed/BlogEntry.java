@@ -54,6 +54,7 @@ final class BlogEntry {
     }
 
     String getUserSeenPublishedDate() {
+
         return userSeenPublishedDate;
     }
 }

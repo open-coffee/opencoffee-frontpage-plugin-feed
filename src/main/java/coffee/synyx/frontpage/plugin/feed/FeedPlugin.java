@@ -15,6 +15,9 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import static coffee.synyx.frontpage.plugin.api.ConfigurationFieldType.NUMBER;
+import static coffee.synyx.frontpage.plugin.api.ConfigurationFieldType.TEXT;
+import static coffee.synyx.frontpage.plugin.api.ConfigurationFieldType.URL;
 import static coffee.synyx.frontpage.plugin.feed.HtmlConverter.toHtml;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
@@ -30,10 +33,10 @@ public class FeedPlugin implements FrontpagePlugin {
     private static final String FEED_FIELD_ENTRY_LENGTH = "feed.field.entry.length";
 
     private static final Set<ConfigurationField> CONFIGURATION_FIELDS = Collections.unmodifiableSet(asSet(
-        createField("Title", ConfigurationFieldType.TEXT, FEED_FIELD_TITLE),
-        createField("URL", ConfigurationFieldType.URL, FEED_FIELD_URL),
-        createField("Anzahl Artikel", ConfigurationFieldType.NUMBER, FEED_FIELD_ENTRY_COUNT),
-        createField("Teaser Text Länge", ConfigurationFieldType.NUMBER, FEED_FIELD_ENTRY_LENGTH)
+        createField("Title", TEXT, FEED_FIELD_TITLE),
+        createField("URL", URL, FEED_FIELD_URL),
+        createField("Anzahl Artikel", NUMBER, FEED_FIELD_ENTRY_COUNT),
+        createField("Teaser Text Länge", NUMBER, FEED_FIELD_ENTRY_LENGTH)
     ));
 
     private final BlogParser blogParser;
