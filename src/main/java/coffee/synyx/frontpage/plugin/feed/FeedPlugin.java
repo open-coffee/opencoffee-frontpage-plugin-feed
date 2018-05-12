@@ -30,10 +30,10 @@ public class FeedPlugin implements FrontpagePlugin {
     private static final String FEED_FIELD_ENTRY_LENGTH = "feed.field.entry.length";
 
     private static final Set<ConfigurationField> CONFIGURATION_FIELDS = Collections.unmodifiableSet(asSet(
-        createField("Title", ConfigurationFieldType.TEXT, FEED_FIELD_TITLE),
-        createField("URL", ConfigurationFieldType.URL, FEED_FIELD_URL),
-        createField("Anzahl Artikel", ConfigurationFieldType.NUMBER, FEED_FIELD_ENTRY_COUNT),
-        createField("Teaser Text Länge", ConfigurationFieldType.NUMBER, FEED_FIELD_ENTRY_LENGTH)
+        createField("Title", ConfigurationFieldType.TEXT, FEED_FIELD_TITLE, false),
+        createField("URL", ConfigurationFieldType.URL, FEED_FIELD_URL, true),
+        createField("Anzahl Artikel", ConfigurationFieldType.NUMBER, FEED_FIELD_ENTRY_COUNT, true),
+        createField("Teaser Text Länge", ConfigurationFieldType.NUMBER, FEED_FIELD_ENTRY_LENGTH, true)
     ));
 
     private final BlogParser blogParser;
@@ -75,12 +75,12 @@ public class FeedPlugin implements FrontpagePlugin {
         return Optional.of(() -> CONFIGURATION_FIELDS);
     }
 
-    private static ConfigurationField createField(final String label, final ConfigurationFieldType type, final String id) {
+    private static ConfigurationField createField(final String label, final ConfigurationFieldType type, final String id, final boolean required) {
         return new ConfigurationField.Builder()
             .label(label)
             .type(type)
             .id(id)
-            .required(true)
+            .required(required)
             .build();
     }
 
