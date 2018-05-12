@@ -2,6 +2,7 @@ package coffee.synyx.frontpage.plugin.feed;
 
 
 import coffee.synyx.frontpage.plugin.api.ConfigurationDescription;
+import coffee.synyx.frontpage.plugin.api.ConfigurationField;
 import coffee.synyx.frontpage.plugin.api.ConfigurationInstance;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,10 +49,10 @@ public class FeedPluginTest {
     public void returnsCorrectHtml() {
 
         BlogEntry blogEntry = new BlogEntry("title", "description", "link", "author", "date", "formattedDate");
-        when(blogParser.parse("url", 10, 100)).thenReturn(singletonList(blogEntry));
+        when(blogParser.parse("url", 10, 100)).thenReturn(new Feed("imageUrl", singletonList(blogEntry)));
 
         assertThat(sut.title(configurationInstance)).isEqualTo("title");
-        assertThat(sut.content(configurationInstance)).contains("author", "date", "formattedDate", "title", "description", "link");
+        assertThat(sut.content(configurationInstance)).contains("author", "date", "formattedDate", "title", "description", "link", "imageUrl");
         assertThat(sut.id()).isEqualTo("feed");
     }
 
@@ -58,9 +60,18 @@ public class FeedPluginTest {
     public void returnsCorrectHtmlWithoutAuthor() {
 
         BlogEntry blogEntry = new BlogEntry("title", "description", "link", "", "date", "formattedDate");
-        when(blogParser.parse("url", 10, 100)).thenReturn(singletonList(blogEntry));
+        when(blogParser.parse("url", 10, 100)).thenReturn(new Feed("imageUrl", singletonList(blogEntry)));
 
         assertThat(sut.content(configurationInstance)).doesNotContain("author");
+    }
+
+    @Test
+    public void returnsCorrectHtmlWithoutImage() {
+
+        BlogEntry blogEntry = new BlogEntry("title", "description", "link", "", "date", "formattedDate");
+        when(blogParser.parse("url", 10, 100)).thenReturn(new Feed("", singletonList(blogEntry)));
+
+        assertThat(sut.content(configurationInstance)).doesNotContain("<img");
     }
 
     @Test

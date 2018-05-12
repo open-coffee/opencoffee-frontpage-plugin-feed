@@ -4,6 +4,7 @@ import com.rometools.rome.feed.synd.SyndContentImpl;
 import com.rometools.rome.feed.synd.SyndEntryImpl;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.feed.synd.SyndFeedImpl;
+import com.rometools.rome.feed.synd.SyndImageImpl;
 import com.rometools.rome.io.FeedException;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,7 +61,9 @@ public class BlogParserTest {
 
         when(feedFactory.build(any(URL.class))).thenReturn(result);
 
-        List<BlogEntry> blogEntries = sut.parse("http://blog/feed/", 10, 150);
+        Feed feed = sut.parse("http://blog/feed/", 10, 150);
+
+        List<BlogEntry> blogEntries = feed.getEntries();
 
         assertThat(blogEntries, hasSize(1));
         assertThat(blogEntries.get(0).getDescription(), is("description"));
@@ -81,12 +84,20 @@ public class BlogParserTest {
         syndEntry.setContents(singletonList(content));
         syndEntry.setPublishedDate(getDate());
 
+        final SyndImageImpl image = new SyndImageImpl();
+        image.setUrl("http://this-is-a-test-url.coffee");
+
         SyndFeed result = new SyndFeedImpl();
+        result.setImage(image);
         result.setEntries(singletonList(syndEntry));
 
         when(feedFactory.build(any(URL.class))).thenReturn(result);
 
-        List<BlogEntry> blogEntries = sut.parse("http://blog/feed/", 10, 150);
+        Feed feed = sut.parse("http://blog/feed/", 10, 150);
+
+        assertThat(feed.getImageUrl(), is("http://this-is-a-test-url.coffee"));
+
+        List<BlogEntry> blogEntries = feed.getEntries();
 
         assertThat(blogEntries, hasSize(1));
         assertThat(blogEntries.get(0).getDescription(), is("content"));
@@ -102,7 +113,9 @@ public class BlogParserTest {
 
         when(feedFactory.build(any(URL.class))).thenReturn(result);
 
-        List<BlogEntry> blogEntries = sut.parse("http://blog/feed/", 10, 150);
+        Feed feed = sut.parse("http://blog/feed/", 10, 150);
+
+        List<BlogEntry> blogEntries = feed.getEntries();
 
         assertThat(blogEntries, hasSize(1));
         assertThat(blogEntries.get(0).getGregorianPublishedDate(), is(nullValue()));

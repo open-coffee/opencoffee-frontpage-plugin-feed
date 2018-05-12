@@ -25,7 +25,7 @@ import static java.util.stream.Collectors.toList;
  * @author Tobias Schneider - schneider@synyx.de
  */
 @Component
-public class BlogParser implements Parser<BlogEntry> {
+public class BlogParser implements Parser {
 
 
     private final FeedFactory feedFactory;
@@ -37,13 +37,17 @@ public class BlogParser implements Parser<BlogEntry> {
     }
 
     @Override
-    public List<BlogEntry> parse(String blogUrl, int limit, int length) {
+    public Feed parse(String blogUrl, int limit, int length) {
 
         try {
             URL url = new URL(blogUrl);
             SyndFeed feed = feedFactory.build(url);
 
-            return feed.getEntries().stream().limit(limit).map(toBlogEntry(length)).collect(toList());
+            String imageUrl = feed.getImage() != null ? feed.getImage().getUrl() : "";
+            List<BlogEntry> blogEntries = feed.getEntries().stream().limit(limit).map(toBlogEntry(length)).collect(toList());
+
+            return new Feed(imageUrl, blogEntries);
+
         } catch (FeedException | IOException e) {
             throw new ParserException("Failed to parse blog with feed link " + blogUrl, e);
         }

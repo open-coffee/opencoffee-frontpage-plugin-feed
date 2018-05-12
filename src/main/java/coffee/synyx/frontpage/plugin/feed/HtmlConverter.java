@@ -1,6 +1,5 @@
 package coffee.synyx.frontpage.plugin.feed;
 
-import java.util.List;
 import java.util.Objects;
 
 class HtmlConverter {
@@ -9,9 +8,14 @@ class HtmlConverter {
         // ok
     }
 
-    static String toHtml(List<BlogEntry> entries) {
+    static String toHtml(Feed feed) {
         String html = "";
-        for (BlogEntry entry : entries) {
+
+        if(!Objects.equals(feed.getImageUrl(), "")) {
+            html += "<img src=\"" + feed.getImageUrl() + "\"/>";
+        }
+
+        for (BlogEntry entry : feed.getEntries()) {
             html += "<div style=\"margin-bottom: 25px;\">";
             html += "  <header>";
             html += "    <h3 style=\"margin-bottom: 0;\">";
