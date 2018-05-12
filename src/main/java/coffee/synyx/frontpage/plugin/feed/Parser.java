@@ -21,7 +21,7 @@ public interface Parser<T> {
      * @param length of description
      * @return List of elements from type T
      */
-    List<T> parse(String url, int limit, int length);
+    Feed parse(String url, int limit, int length);
 
 
     /**

@@ -60,7 +60,9 @@ public class BlogParserTest {
 
         when(feedFactory.build(any(URL.class))).thenReturn(result);
 
-        List<BlogEntry> blogEntries = sut.parse("http://blog/feed/", 10, 150);
+        Feed feed = sut.parse("http://blog/feed/", 10, 150);
+
+        List<BlogEntry> blogEntries = feed.getEntries();
 
         assertThat(blogEntries, hasSize(1));
         assertThat(blogEntries.get(0).getDescription(), is("description"));
@@ -86,7 +88,9 @@ public class BlogParserTest {
 
         when(feedFactory.build(any(URL.class))).thenReturn(result);
 
-        List<BlogEntry> blogEntries = sut.parse("http://blog/feed/", 10, 150);
+        Feed feed = sut.parse("http://blog/feed/", 10, 150);
+
+        List<BlogEntry> blogEntries = feed.getEntries();
 
         assertThat(blogEntries, hasSize(1));
         assertThat(blogEntries.get(0).getDescription(), is("content"));
@@ -102,7 +106,9 @@ public class BlogParserTest {
 
         when(feedFactory.build(any(URL.class))).thenReturn(result);
 
-        List<BlogEntry> blogEntries = sut.parse("http://blog/feed/", 10, 150);
+        Feed feed = sut.parse("http://blog/feed/", 10, 150);
+
+        List<BlogEntry> blogEntries = feed.getEntries();
 
         assertThat(blogEntries, hasSize(1));
         assertThat(blogEntries.get(0).getGregorianPublishedDate(), is(nullValue()));
