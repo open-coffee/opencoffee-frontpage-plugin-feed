@@ -19,7 +19,7 @@ public interface Parser {
      * @param length of description
      * @return converted feed
      */
-    Feed parse(String url, int limit, int length);
+    FeedDto parse(String url, int limit, int length);
 
 
     /**

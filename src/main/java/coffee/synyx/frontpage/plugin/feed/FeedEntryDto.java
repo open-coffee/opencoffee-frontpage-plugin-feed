@@ -5,7 +5,7 @@ package coffee.synyx.frontpage.plugin.feed;
  *
  * @author Tobias Schneider - schneider@synyx.de
  */
-final class BlogEntry {
+final class FeedEntryDto {
 
     private final String title;
     private final String author;
@@ -14,7 +14,7 @@ final class BlogEntry {
     private final String gregorianPublishedDate;
     private final String userSeenPublishedDate;
 
-    BlogEntry(String title, String description, String link, String author, String gregorianPublishedDate, String userSeenPublishedDate) {
+    FeedEntryDto(String title, String description, String link, String author, String gregorianPublishedDate, String userSeenPublishedDate) {
 
         this.title = title;
         this.description = description;

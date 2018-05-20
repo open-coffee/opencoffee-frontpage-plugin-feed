@@ -8,10 +8,10 @@ class HtmlConverter {
         // ok
     }
 
-    static String toHtml(Feed feed) {
+    static String toHtml(FeedDto feedDto) {
         String html = "";
 
-        final FeedImage image = feed.getImage();
+        final FeedImageDto image = feedDto.getImage();
         if (!Objects.equals(image.getUrl(), "")) {
             if (!Objects.equals(image.getLink(), "")) {
                 html += "<a href=\"" + image.getLink() + "\" title=\"" + image.getTitle() + "\" rel=\"noopener\">";
@@ -22,7 +22,7 @@ class HtmlConverter {
             }
         }
 
-        for (BlogEntry entry : feed.getEntries()) {
+        for (FeedEntryDto entry : feedDto.getEntries()) {
             html += "<div style=\"margin-bottom: 25px;\">";
             html += "  <header>";
             html += "    <h3 style=\"margin-bottom: 0;\">";

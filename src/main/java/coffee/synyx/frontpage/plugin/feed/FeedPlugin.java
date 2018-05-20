@@ -39,11 +39,11 @@ public class FeedPlugin implements FrontpagePlugin {
         createField("Teaser Text Länge", NUMBER, FEED_FIELD_ENTRY_LENGTH)
     ));
 
-    private final BlogParser blogParser;
+    private final FeedParser feedParser;
 
     @Autowired
-    public FeedPlugin(BlogParser blogParser) {
-        this.blogParser = blogParser;
+    public FeedPlugin(FeedParser feedParser) {
+        this.feedParser = feedParser;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class FeedPlugin implements FrontpagePlugin {
 
         String content = "";
         try {
-            content = toHtml(blogParser.parse(feedUrl, entryCount, entryLength));
+            content = toHtml(feedParser.parse(feedUrl, entryCount, entryLength));
         } catch (ParserException e) {
             LOGGER.error("Feed Plugin: Could not receive feed feed from {}", feedUrl);
         }

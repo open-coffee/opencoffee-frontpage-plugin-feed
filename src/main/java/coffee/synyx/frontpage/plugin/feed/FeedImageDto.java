@@ -1,6 +1,6 @@
 package coffee.synyx.frontpage.plugin.feed;
 
-class FeedImage {
+class FeedImageDto {
 
     private final String url;
     private final String link;
@@ -9,7 +9,7 @@ class FeedImage {
     private final String height;
     private final String title;
 
-    FeedImage(String url, String link, String description, String width, String height, String title) {
+    FeedImageDto(String url, String link, String description, String width, String height, String title) {
         this.url = url;
         this.link = link;
         this.description = description;

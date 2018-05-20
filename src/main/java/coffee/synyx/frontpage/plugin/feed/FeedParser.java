@@ -26,34 +26,34 @@ import static java.util.stream.Collectors.toList;
  * @author Tobias Schneider - schneider@synyx.de
  */
 @Component
-public class BlogParser implements Parser {
+public class FeedParser implements Parser {
 
     private final FeedFactory feedFactory;
 
     @Autowired
-    public BlogParser(FeedFactory feedFactory) {
+    public FeedParser(FeedFactory feedFactory) {
 
         this.feedFactory = feedFactory;
     }
 
     @Override
-    public Feed parse(String blogUrl, int limit, int length) {
+    public FeedDto parse(String blogUrl, int limit, int length) {
 
         try {
             final URL url = new URL(blogUrl);
             final SyndFeed feed = feedFactory.build(url);
 
-            final FeedImage feedImage = toFeedImage(feed.getImage());
-            final List<BlogEntry> blogEntries = feed.getEntries().stream().limit(limit).map(toBlogEntry(length)).collect(toList());
+            final FeedImageDto feedImageDto = toFeedImage(feed.getImage());
+            final List<FeedEntryDto> blogEntries = feed.getEntries().stream().limit(limit).map(toBlogEntry(length)).collect(toList());
 
-            return new Feed(feedImage, blogEntries);
+            return new FeedDto(feedImageDto, blogEntries);
 
         } catch (FeedException | IOException e) {
             throw new ParserException("Failed to parse blog with feed link " + blogUrl, e);
         }
     }
 
-    private FeedImage toFeedImage(SyndImage image) {
+    private FeedImageDto toFeedImage(SyndImage image) {
 
         String url = "";
         String link = "";
@@ -71,10 +71,10 @@ public class BlogParser implements Parser {
             title = image.getTitle() == null ? "" : image.getTitle();
         }
 
-        return new FeedImage(url, link, description, width, height, title);
+        return new FeedImageDto(url, link, description, width, height, title);
     }
 
-    private Function<SyndEntry, BlogEntry> toBlogEntry(int length) {
+    private Function<SyndEntry, FeedEntryDto> toBlogEntry(int length) {
 
         return
             entry -> {
@@ -90,7 +90,7 @@ public class BlogParser implements Parser {
                 String gregorianPublishedDate = getFormattedPublishedDate(entry, "yyyy-MM-dd HH:mm");
                 String userSeenPublishedDate = getFormattedPublishedDate(entry, "d. MMMM yyyy");
 
-                return new BlogEntry(entry.getTitle(), reducedArticle, entry.getLink(), entry.getAuthor(), gregorianPublishedDate, userSeenPublishedDate);
+                return new FeedEntryDto(entry.getTitle(), reducedArticle, entry.getLink(), entry.getAuthor(), gregorianPublishedDate, userSeenPublishedDate);
             };
     }
 

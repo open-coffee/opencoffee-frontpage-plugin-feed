@@ -30,9 +30,9 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BlogParserTest {
+public class FeedParserTest {
 
-    private BlogParser sut;
+    private FeedParser sut;
 
     @Mock
     private FeedFactory feedFactory;
@@ -40,7 +40,7 @@ public class BlogParserTest {
     @Before
     public void setUp() {
 
-        sut = new BlogParser(feedFactory);
+        sut = new FeedParser(feedFactory);
     }
 
 
@@ -67,9 +67,9 @@ public class BlogParserTest {
 
         when(feedFactory.build(any(URL.class))).thenReturn(result);
 
-        Feed feed = sut.parse("http://blog/feed/", 10, 150);
+        FeedDto feedDto = sut.parse("http://blog/feed/", 10, 150);
 
-        final List<BlogEntry> blogEntries = feed.getEntries();
+        final List<FeedEntryDto> blogEntries = feedDto.getEntries();
         assertThat(blogEntries, hasSize(1));
         assertThat(blogEntries.get(0).getDescription(), is("description"));
         assertThat(blogEntries.get(0).getLink(), is("link"));
@@ -78,7 +78,7 @@ public class BlogParserTest {
         assertThat(blogEntries.get(0).getAuthor(), is("author"));
         assertThat(blogEntries.get(0).getTitle(), is("title"));
 
-        final FeedImage image = feed.getImage();
+        final FeedImageDto image = feedDto.getImage();
         assertThat(image.getUrl(), is("some-url"));
         assertThat(image.getLink(), is("some-link"));
     }
@@ -102,11 +102,11 @@ public class BlogParserTest {
 
         when(feedFactory.build(any(URL.class))).thenReturn(result);
 
-        Feed feed = sut.parse("http://blog/feed/", 10, 150);
+        FeedDto feedDto = sut.parse("http://blog/feed/", 10, 150);
 
-        assertThat(feed.getImage().getUrl(), is("http://this-is-a-test-url.coffee"));
+        assertThat(feedDto.getImage().getUrl(), is("http://this-is-a-test-url.coffee"));
 
-        List<BlogEntry> blogEntries = feed.getEntries();
+        List<FeedEntryDto> blogEntries = feedDto.getEntries();
 
         assertThat(blogEntries, hasSize(1));
         assertThat(blogEntries.get(0).getDescription(), is("content"));
@@ -122,9 +122,9 @@ public class BlogParserTest {
 
         when(feedFactory.build(any(URL.class))).thenReturn(result);
 
-        Feed feed = sut.parse("http://blog/feed/", 10, 150);
+        FeedDto feedDto = sut.parse("http://blog/feed/", 10, 150);
 
-        List<BlogEntry> blogEntries = feed.getEntries();
+        List<FeedEntryDto> blogEntries = feedDto.getEntries();
 
         assertThat(blogEntries, hasSize(1));
         assertThat(blogEntries.get(0).getGregorianPublishedDate(), is(nullValue()));
