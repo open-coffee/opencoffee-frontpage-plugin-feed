@@ -3,8 +3,6 @@ package coffee.synyx.frontpage.plugin.feed;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 
-import java.util.List;
-
 import static java.lang.Math.min;
 
 
@@ -13,15 +11,15 @@ import static java.lang.Math.min;
  *
  * @author Tobias Schneider - schneider@synyx.de
  */
-public interface Parser<T> {
+public interface Parser {
 
     /**
      * @param url    of blog e.g.
      * @param limit  of entries
      * @param length of description
-     * @return List of elements from type T
+     * @return converted feed
      */
-    List<T> parse(String url, int limit, int length);
+    FeedDto parse(String url, int limit, int length);
 
 
     /**

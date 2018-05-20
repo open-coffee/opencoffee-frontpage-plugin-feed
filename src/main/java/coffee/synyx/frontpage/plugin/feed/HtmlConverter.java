@@ -1,6 +1,5 @@
 package coffee.synyx.frontpage.plugin.feed;
 
-import java.util.List;
 import java.util.Objects;
 
 class HtmlConverter {
@@ -9,9 +8,21 @@ class HtmlConverter {
         // ok
     }
 
-    static String toHtml(List<BlogEntry> entries) {
+    static String toHtml(FeedDto feedDto) {
         String html = "";
-        for (BlogEntry entry : entries) {
+
+        final FeedImageDto image = feedDto.getImage();
+        if (!Objects.equals(image.getUrl(), "")) {
+            if (!Objects.equals(image.getLink(), "")) {
+                html += "<a href=\"" + image.getLink() + "\" title=\"" + image.getTitle() + "\" rel=\"noopener\">";
+            }
+            html += " <img height=\"" + image.getHeight() + "\" width=\"" + image.getWidth() + "\" src=\"" + image.getUrl() + "\" alt=\"" + image.getDescription() + "\"/>";
+            if (!Objects.equals(image.getLink(), "")) {
+                html += "</a>";
+            }
+        }
+
+        for (FeedEntryDto entry : feedDto.getEntries()) {
             html += "<div style=\"margin-bottom: 25px;\">";
             html += "  <header>";
             html += "    <h3 style=\"margin-bottom: 0;\">";
@@ -19,7 +30,7 @@ class HtmlConverter {
             html += "    </h3>";
             html += "    <address style=\"font-size: smaller;\">";
 
-            if(!Objects.equals(entry.getAuthor(), "")) {
+            if (!Objects.equals(entry.getAuthor(), "")) {
                 html += entry.getAuthor() + " - ";
             }
 

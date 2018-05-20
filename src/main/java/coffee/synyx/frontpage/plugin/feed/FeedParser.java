@@ -2,6 +2,7 @@ package coffee.synyx.frontpage.plugin.feed;
 
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
+import com.rometools.rome.feed.synd.SyndImage;
 import com.rometools.rome.io.FeedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,31 +26,55 @@ import static java.util.stream.Collectors.toList;
  * @author Tobias Schneider - schneider@synyx.de
  */
 @Component
-public class BlogParser implements Parser<BlogEntry> {
-
+public class FeedParser implements Parser {
 
     private final FeedFactory feedFactory;
 
     @Autowired
-    public BlogParser(FeedFactory feedFactory) {
+    public FeedParser(FeedFactory feedFactory) {
 
         this.feedFactory = feedFactory;
     }
 
     @Override
-    public List<BlogEntry> parse(String blogUrl, int limit, int length) {
+    public FeedDto parse(String blogUrl, int limit, int length) {
 
         try {
-            URL url = new URL(blogUrl);
-            SyndFeed feed = feedFactory.build(url);
+            final URL url = new URL(blogUrl);
+            final SyndFeed feed = feedFactory.build(url);
 
-            return feed.getEntries().stream().limit(limit).map(toBlogEntry(length)).collect(toList());
+            final FeedImageDto feedImageDto = toFeedImage(feed.getImage());
+            final List<FeedEntryDto> blogEntries = feed.getEntries().stream().limit(limit).map(toBlogEntry(length)).collect(toList());
+
+            return new FeedDto(feedImageDto, blogEntries);
+
         } catch (FeedException | IOException e) {
             throw new ParserException("Failed to parse blog with feed link " + blogUrl, e);
         }
     }
 
-    private Function<SyndEntry, BlogEntry> toBlogEntry(int length) {
+    private FeedImageDto toFeedImage(SyndImage image) {
+
+        String url = "";
+        String link = "";
+        String description = "";
+        String width = "";
+        String height = "";
+        String title = "";
+
+        if (image != null) {
+            url = image.getUrl() == null ? "" : image.getUrl();
+            link = image.getLink() == null ? "" : image.getLink();
+            description = image.getDescription() == null ? "" : image.getDescription();
+            width = image.getWidth() == null || image.getWidth() < 0 ? "" : image.getWidth().toString();
+            height = image.getHeight() == null || image.getHeight() < 0 ? "" : image.getHeight().toString();
+            title = image.getTitle() == null ? "" : image.getTitle();
+        }
+
+        return new FeedImageDto(url, link, description, width, height, title);
+    }
+
+    private Function<SyndEntry, FeedEntryDto> toBlogEntry(int length) {
 
         return
             entry -> {
@@ -65,14 +90,14 @@ public class BlogParser implements Parser<BlogEntry> {
                 String gregorianPublishedDate = getFormattedPublishedDate(entry, "yyyy-MM-dd HH:mm");
                 String userSeenPublishedDate = getFormattedPublishedDate(entry, "d. MMMM yyyy");
 
-                return new BlogEntry(entry.getTitle(), reducedArticle, entry.getLink(), entry.getAuthor(), gregorianPublishedDate, userSeenPublishedDate);
+                return new FeedEntryDto(entry.getTitle(), reducedArticle, entry.getLink(), entry.getAuthor(), gregorianPublishedDate, userSeenPublishedDate);
             };
     }
 
 
     private String getFormattedPublishedDate(SyndEntry syndEntry, String pattern) {
 
-        Date publishedDate = syndEntry.getPublishedDate();
+        final Date publishedDate = syndEntry.getPublishedDate();
 
         String formattedPublishedDate = null;
 

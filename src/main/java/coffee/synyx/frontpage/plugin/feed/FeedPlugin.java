@@ -15,6 +15,9 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import static coffee.synyx.frontpage.plugin.api.ConfigurationFieldType.NUMBER;
+import static coffee.synyx.frontpage.plugin.api.ConfigurationFieldType.TEXT;
+import static coffee.synyx.frontpage.plugin.api.ConfigurationFieldType.URL;
 import static coffee.synyx.frontpage.plugin.feed.HtmlConverter.toHtml;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
@@ -30,17 +33,17 @@ public class FeedPlugin implements FrontpagePlugin {
     private static final String FEED_FIELD_ENTRY_LENGTH = "feed.field.entry.length";
 
     private static final Set<ConfigurationField> CONFIGURATION_FIELDS = Collections.unmodifiableSet(asSet(
-        createField("Title", ConfigurationFieldType.TEXT, FEED_FIELD_TITLE),
-        createField("URL", ConfigurationFieldType.URL, FEED_FIELD_URL),
-        createField("Anzahl Artikel", ConfigurationFieldType.NUMBER, FEED_FIELD_ENTRY_COUNT),
-        createField("Teaser Text Länge", ConfigurationFieldType.NUMBER, FEED_FIELD_ENTRY_LENGTH)
+        createField("Title", TEXT, FEED_FIELD_TITLE, false),
+        createField("URL", URL, FEED_FIELD_URL, true),
+        createField("Anzahl Artikel", NUMBER, FEED_FIELD_ENTRY_COUNT, true),
+        createField("Teaser Text Länge", NUMBER, FEED_FIELD_ENTRY_LENGTH, true)
     ));
 
-    private final BlogParser blogParser;
+    private final FeedParser feedParser;
 
     @Autowired
-    public FeedPlugin(BlogParser blogParser) {
-        this.blogParser = blogParser;
+    public FeedPlugin(FeedParser feedParser) {
+        this.feedParser = feedParser;
     }
 
     @Override
@@ -57,7 +60,7 @@ public class FeedPlugin implements FrontpagePlugin {
 
         String content = "";
         try {
-            content = toHtml(blogParser.parse(feedUrl, entryCount, entryLength));
+            content = toHtml(feedParser.parse(feedUrl, entryCount, entryLength));
         } catch (ParserException e) {
             LOGGER.error("Feed Plugin: Could not receive feed feed from {}", feedUrl);
         }
@@ -75,12 +78,12 @@ public class FeedPlugin implements FrontpagePlugin {
         return Optional.of(() -> CONFIGURATION_FIELDS);
     }
 
-    private static ConfigurationField createField(final String label, final ConfigurationFieldType type, final String id) {
+    private static ConfigurationField createField(final String label, final ConfigurationFieldType type, final String id, final boolean required) {
         return new ConfigurationField.Builder()
             .label(label)
             .type(type)
             .id(id)
-            .required(true)
+            .required(required)
             .build();
     }
 

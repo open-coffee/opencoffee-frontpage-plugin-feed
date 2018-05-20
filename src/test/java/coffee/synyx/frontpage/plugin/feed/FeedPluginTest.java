@@ -21,7 +21,7 @@ public class FeedPluginTest {
     private FeedPlugin sut;
 
     @Mock
-    private BlogParser blogParser;
+    private FeedParser feedParser;
 
     private ConfigurationInstance configurationInstance = key -> {
         switch (key) {
@@ -40,33 +40,46 @@ public class FeedPluginTest {
 
     @Before
     public void setUp() {
-        sut = new FeedPlugin(blogParser);
+        sut = new FeedPlugin(feedParser);
     }
 
     @Test
     public void returnsCorrectHtml() {
 
-        BlogEntry blogEntry = new BlogEntry("title", "description", "link", "author", "date", "formattedDate");
-        when(blogParser.parse("url", 10, 100)).thenReturn(singletonList(blogEntry));
+        FeedEntryDto feedEntryDto = new FeedEntryDto("title", "description", "link", "author", "date", "formattedDate");
+        FeedImageDto feedImageDto = new FeedImageDto("imageUrl", "imageLink", "imageDescription", "10", "12", "imageTitle");
+        when(feedParser.parse("url", 10, 100)).thenReturn(new FeedDto(feedImageDto, singletonList(feedEntryDto)));
 
         assertThat(sut.title(configurationInstance)).isEqualTo("title");
-        assertThat(sut.content(configurationInstance)).contains("author", "date", "formattedDate", "title", "description", "link");
+        assertThat(sut.content(configurationInstance)).contains("author", "date", "formattedDate", "title", "description", "link", "imageUrl");
         assertThat(sut.id()).isEqualTo("feed");
     }
 
     @Test
     public void returnsCorrectHtmlWithoutAuthor() {
 
-        BlogEntry blogEntry = new BlogEntry("title", "description", "link", "", "date", "formattedDate");
-        when(blogParser.parse("url", 10, 100)).thenReturn(singletonList(blogEntry));
+        FeedEntryDto feedEntryDto = new FeedEntryDto("title", "description", "link", "", "date", "formattedDate");
+        FeedImageDto feedImageDto = new FeedImageDto("imageUrl", "imageLink", "imageDescription", "10", "12", "imageTitle");
+        when(feedParser.parse("url", 10, 100)).thenReturn(new FeedDto(feedImageDto, singletonList(feedEntryDto)));
 
         assertThat(sut.content(configurationInstance)).doesNotContain("author");
     }
 
     @Test
+    public void returnsCorrectHtmlWithoutImage() {
+
+        FeedEntryDto feedEntryDto = new FeedEntryDto("title", "description", "link", "", "date", "formattedDate");
+        FeedImageDto feedImageDto = new FeedImageDto("", "imageLink", "", "", "", "");
+        when(feedParser.parse("url", 10, 100)).thenReturn(new FeedDto(feedImageDto, singletonList(feedEntryDto)));
+
+        assertThat(sut.content(configurationInstance)).doesNotContain("<img");
+        assertThat(sut.content(configurationInstance)).doesNotContain("src=\"imageUrl\"");
+    }
+
+    @Test
     public void throwsParserException() {
 
-        when(blogParser.parse("url", 10, 100)).thenThrow(new ParserException("message", new Throwable()));
+        when(feedParser.parse("url", 10, 100)).thenThrow(new ParserException("message", new Throwable()));
         assertThat(sut.content(configurationInstance)).isEqualTo("");
     }
 

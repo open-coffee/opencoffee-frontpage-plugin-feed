@@ -4,6 +4,8 @@ import com.rometools.rome.feed.synd.SyndContentImpl;
 import com.rometools.rome.feed.synd.SyndEntryImpl;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.feed.synd.SyndFeedImpl;
+import com.rometools.rome.feed.synd.SyndImage;
+import com.rometools.rome.feed.synd.SyndImageImpl;
 import com.rometools.rome.io.FeedException;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,9 +30,9 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BlogParserTest {
+public class FeedParserTest {
 
-    private BlogParser sut;
+    private FeedParser sut;
 
     @Mock
     private FeedFactory feedFactory;
@@ -38,7 +40,7 @@ public class BlogParserTest {
     @Before
     public void setUp() {
 
-        sut = new BlogParser(feedFactory);
+        sut = new FeedParser(feedFactory);
     }
 
 
@@ -55,13 +57,19 @@ public class BlogParserTest {
         syndEntry.setTitle("title");
         syndEntry.setPublishedDate(getDate());
 
+        SyndImage syndImage = new SyndImageImpl();
+        syndImage.setUrl("some-url");
+        syndImage.setLink("some-link");
+
         SyndFeed result = new SyndFeedImpl();
         result.setEntries(singletonList(syndEntry));
+        result.setImage(syndImage);
 
         when(feedFactory.build(any(URL.class))).thenReturn(result);
 
-        List<BlogEntry> blogEntries = sut.parse("http://blog/feed/", 10, 150);
+        FeedDto feedDto = sut.parse("http://blog/feed/", 10, 150);
 
+        final List<FeedEntryDto> blogEntries = feedDto.getEntries();
         assertThat(blogEntries, hasSize(1));
         assertThat(blogEntries.get(0).getDescription(), is("description"));
         assertThat(blogEntries.get(0).getLink(), is("link"));
@@ -69,6 +77,10 @@ public class BlogParserTest {
         assertThat(blogEntries.get(0).getGregorianPublishedDate(), is("2014-12-03 10:15"));
         assertThat(blogEntries.get(0).getAuthor(), is("author"));
         assertThat(blogEntries.get(0).getTitle(), is("title"));
+
+        final FeedImageDto image = feedDto.getImage();
+        assertThat(image.getUrl(), is("some-url"));
+        assertThat(image.getLink(), is("some-link"));
     }
 
     @Test
@@ -81,12 +93,20 @@ public class BlogParserTest {
         syndEntry.setContents(singletonList(content));
         syndEntry.setPublishedDate(getDate());
 
+        final SyndImageImpl image = new SyndImageImpl();
+        image.setUrl("http://this-is-a-test-url.coffee");
+
         SyndFeed result = new SyndFeedImpl();
+        result.setImage(image);
         result.setEntries(singletonList(syndEntry));
 
         when(feedFactory.build(any(URL.class))).thenReturn(result);
 
-        List<BlogEntry> blogEntries = sut.parse("http://blog/feed/", 10, 150);
+        FeedDto feedDto = sut.parse("http://blog/feed/", 10, 150);
+
+        assertThat(feedDto.getImage().getUrl(), is("http://this-is-a-test-url.coffee"));
+
+        List<FeedEntryDto> blogEntries = feedDto.getEntries();
 
         assertThat(blogEntries, hasSize(1));
         assertThat(blogEntries.get(0).getDescription(), is("content"));
@@ -102,7 +122,9 @@ public class BlogParserTest {
 
         when(feedFactory.build(any(URL.class))).thenReturn(result);
 
-        List<BlogEntry> blogEntries = sut.parse("http://blog/feed/", 10, 150);
+        FeedDto feedDto = sut.parse("http://blog/feed/", 10, 150);
+
+        List<FeedEntryDto> blogEntries = feedDto.getEntries();
 
         assertThat(blogEntries, hasSize(1));
         assertThat(blogEntries.get(0).getGregorianPublishedDate(), is(nullValue()));
