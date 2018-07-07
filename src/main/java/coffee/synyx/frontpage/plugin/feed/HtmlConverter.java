@@ -16,7 +16,7 @@ class HtmlConverter {
             if (!Objects.equals(image.getLink(), "")) {
                 html += "<a href=\"" + image.getLink() + "\" title=\"" + image.getTitle() + "\" rel=\"noopener\">";
             }
-            html += " <img height=\"" + image.getHeight() + "\" width=\"" + image.getWidth() + "\" src=\"" + image.getUrl() + "\" alt=\"" + image.getDescription() + "\"/>";
+            html += " <img style=\"filter: grayscale(100%);\" height=\"" + image.getHeight() + "\" width=\"" + image.getWidth() + "\" src=\"" + image.getUrl() + "\" alt=\"" + image.getDescription() + "\"/>";
             if (!Objects.equals(image.getLink(), "")) {
                 html += "</a>";
             }
