@@ -28,7 +28,7 @@ public class FeedPlugin implements FrontpagePlugin {
     private static final Logger LOGGER = LoggerFactory.getLogger(lookup().lookupClass());
 
     private static final String FEED_FIELD_TITLE = "feed.field.title";
-    private static final String FEED_FIELD_URL = "feed.field.url";
+    static final String FEED_FIELD_URL = "feed.field.url";
     private static final String FEED_FIELD_ENTRY_COUNT = "feed.field.entry.count";
     private static final String FEED_FIELD_ENTRY_LENGTH = "feed.field.entry.length";
 
