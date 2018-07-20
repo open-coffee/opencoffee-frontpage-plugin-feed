@@ -1,13 +1,28 @@
 # Changelog
+All notable changes to this project will be documented in this file.
 
-## 0.2.0-SNAPSHOT
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+
+
+## [Unreleased]
+### Added
+- Greyscale images
+- Feed url validator
+
+### Changed
+- CoffeeNet Starter Parent to 0.31.0
+- Frontpage-Plugin-Api to 0.6.0
 
 
 ## 0.1.0
+### Added
+- Feed plugin can display rss/atom feeds on the frontpage
+  - Configurable
+    - Teasertext
+    - Numbers of entries
+    - Url of Feed
+    - Title
 
-* Feed plugin can display rss/atom feeds on the frontpage
-  * Configurable
-    * Teasertext
-    * Numbers of entries
-    * Url of Feed
-    * Title
+
+[Unreleased]: https://github.com/coffeenet/coffeenet-frontpage/compare/0.1.0...HEAD
