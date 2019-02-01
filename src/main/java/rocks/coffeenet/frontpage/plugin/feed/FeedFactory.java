@@ -1,4 +1,4 @@
-package coffee.synyx.frontpage.plugin.feed;
+package rocks.coffeenet.frontpage.plugin.feed;
 
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;

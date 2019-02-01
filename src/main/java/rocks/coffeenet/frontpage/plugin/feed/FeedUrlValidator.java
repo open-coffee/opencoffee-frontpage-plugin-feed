@@ -1,4 +1,4 @@
-package coffee.synyx.frontpage.plugin.feed;
+package rocks.coffeenet.frontpage.plugin.feed;
 
 import coffee.synyx.frontpage.plugin.api.ConfigurationField;
 import coffee.synyx.frontpage.plugin.api.validation.ConfigurationFieldValidator;
