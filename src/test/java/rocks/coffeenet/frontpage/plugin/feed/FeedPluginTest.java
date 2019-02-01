@@ -1,4 +1,4 @@
-package coffee.synyx.frontpage.plugin.feed;
+package rocks.coffeenet.frontpage.plugin.feed;
 
 
 import coffee.synyx.frontpage.plugin.api.ConfigurationDescription;

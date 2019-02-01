@@ -1,4 +1,4 @@
-package coffee.synyx.frontpage.plugin.feed;
+package rocks.coffeenet.frontpage.plugin.feed;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;

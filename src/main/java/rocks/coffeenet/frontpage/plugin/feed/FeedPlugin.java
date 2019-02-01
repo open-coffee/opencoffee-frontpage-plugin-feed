@@ -1,4 +1,4 @@
-package coffee.synyx.frontpage.plugin.feed;
+package rocks.coffeenet.frontpage.plugin.feed;
 
 import coffee.synyx.frontpage.plugin.api.ConfigurationDescription;
 import coffee.synyx.frontpage.plugin.api.ConfigurationField;
@@ -18,7 +18,6 @@ import java.util.Set;
 import static coffee.synyx.frontpage.plugin.api.ConfigurationFieldType.NUMBER;
 import static coffee.synyx.frontpage.plugin.api.ConfigurationFieldType.TEXT;
 import static coffee.synyx.frontpage.plugin.api.ConfigurationFieldType.URL;
-import static coffee.synyx.frontpage.plugin.feed.HtmlConverter.toHtml;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
 
@@ -60,7 +59,7 @@ public class FeedPlugin implements FrontpagePlugin {
 
         String content = "";
         try {
-            content = toHtml(feedParser.parse(feedUrl, entryCount, entryLength));
+            content = HtmlConverter.toHtml(feedParser.parse(feedUrl, entryCount, entryLength));
         } catch (ParserException e) {
             LOGGER.error("Feed Plugin: Could not receive feed feed from {}", feedUrl);
         }
