@@ -1,10 +1,10 @@
 package rocks.coffeenet.frontpage.plugin.feed;
 
-import coffee.synyx.frontpage.plugin.api.ConfigurationField;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.validation.MapBindingResult;
+import rocks.coffeenet.frontpage.plugin.api.ConfigurationField;
 
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;

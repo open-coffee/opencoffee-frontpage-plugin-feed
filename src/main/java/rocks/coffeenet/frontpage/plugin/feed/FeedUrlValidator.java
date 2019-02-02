@@ -1,10 +1,10 @@
 package rocks.coffeenet.frontpage.plugin.feed;
 
-import coffee.synyx.frontpage.plugin.api.ConfigurationField;
-import coffee.synyx.frontpage.plugin.api.validation.ConfigurationFieldValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
+import rocks.coffeenet.frontpage.plugin.api.ConfigurationField;
+import rocks.coffeenet.frontpage.plugin.api.validation.ConfigurationFieldValidator;
 
 @Component
 public class FeedUrlValidator implements ConfigurationFieldValidator {
