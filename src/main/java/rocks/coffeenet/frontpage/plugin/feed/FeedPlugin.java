@@ -1,25 +1,25 @@
 package rocks.coffeenet.frontpage.plugin.feed;
 
-import coffee.synyx.frontpage.plugin.api.ConfigurationDescription;
-import coffee.synyx.frontpage.plugin.api.ConfigurationField;
-import coffee.synyx.frontpage.plugin.api.ConfigurationFieldType;
-import coffee.synyx.frontpage.plugin.api.ConfigurationInstance;
-import coffee.synyx.frontpage.plugin.api.FrontpagePlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import rocks.coffeenet.frontpage.plugin.api.ConfigurationDescription;
+import rocks.coffeenet.frontpage.plugin.api.ConfigurationField;
+import rocks.coffeenet.frontpage.plugin.api.ConfigurationFieldType;
+import rocks.coffeenet.frontpage.plugin.api.ConfigurationInstance;
+import rocks.coffeenet.frontpage.plugin.api.FrontpagePlugin;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static coffee.synyx.frontpage.plugin.api.ConfigurationFieldType.NUMBER;
-import static coffee.synyx.frontpage.plugin.api.ConfigurationFieldType.TEXT;
-import static coffee.synyx.frontpage.plugin.api.ConfigurationFieldType.URL;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
+import static rocks.coffeenet.frontpage.plugin.api.ConfigurationFieldType.NUMBER;
+import static rocks.coffeenet.frontpage.plugin.api.ConfigurationFieldType.TEXT;
+import static rocks.coffeenet.frontpage.plugin.api.ConfigurationFieldType.URL;
 
 @Component
 public class FeedPlugin implements FrontpagePlugin {
